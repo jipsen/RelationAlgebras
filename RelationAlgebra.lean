@@ -217,7 +217,7 @@ lemma peirce_law2 (x y z : A) : x ; y ⊓ z = ⊥ ↔ z ; y⁻¹ ⊓ x = ⊥ := 
 /- Full relation algebras Re(X) = (P(X²), ∪, ∩, \, ∅, X², ;, ⁻¹, id) as instance of
 the class RelationAlgebra
 
-P(X²) is the power set of X², ∪ is the union of sets, ∩ is the intersection of sets, \ is the set difference,
+P(X²) is the power set of X², ∪ is union, ∩ is intersection, \ is set-difference,
 
 Set (X x X)
 -/
@@ -520,7 +520,7 @@ instance : AtomStructure (Z₃) where
   assoc u x y z w := by
     intro h
     cases u <;> cases x <;> cases y <;> cases z <;> cases w <;>
-      simp [Z₃.ternary] at h ⊢ <;>
+      simp only [Z₃.ternary] at h ⊢ <;>
       first
       | exact ⟨Z₃.e, trivial, trivial⟩
       | exact ⟨Z₃.a, trivial, trivial⟩
@@ -570,7 +570,7 @@ theorem comp_assoc {a b : X} : (a, b) ∈ com (com R S) T → (a, b) ∈ com R (
   rcases h₁ with ⟨x,_,_⟩
   use x
   constructor
-  trivial
+  · trivial
   use z
 
 
@@ -589,7 +589,7 @@ theorem Mtrue :
   t ∩ com (u ∩ com v w) (x ∩ com y z) ⊆
     com (com v (com (com (inv v) t ∩ com w x) (inv z) ∩ com w y ∩
       com (inv v) (com u y ∩ com t (inv z)))) z := by
-  intro (a0, b0) h
+  intro (a0,b0) h
   rcases h with ⟨h1,h2⟩
   rcases h2 with ⟨c,h1,h2⟩
   rcases h1 with ⟨h3,h4⟩
@@ -600,7 +600,7 @@ theorem Mtrue :
   constructor
   use d
   constructor
-  trivial
+  · trivial
   constructor
   constructor
   use b0
@@ -610,8 +610,8 @@ theorem Mtrue :
   constructor
   rw [_root_.inv]
   dsimp
-  trivial
-  trivial
+  · trivial
+  · trivial
   use c
   rw [_root_.inv]
   dsimp
@@ -621,7 +621,7 @@ theorem Mtrue :
   constructor
   rw [_root_.inv]
   dsimp
-  trivial
+  · trivial
   constructor
   use c
   use b0
@@ -629,7 +629,7 @@ theorem Mtrue :
   trivial
   rw [_root_.inv]
   dsimp
-  trivial
+  · trivial
   trivial
 
 
