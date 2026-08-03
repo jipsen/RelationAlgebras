@@ -275,7 +275,7 @@ instance instLatticeSet : Lattice (Set α) :=
 #check Set.Subset.refl
 
 instance fullRA : RelationAlgebra (Set (X × X)) where
-  __ := inferInstanceAs (BooleanAlgebra (Set (X × X)))
+  toBooleanAlgebra := inferInstance
   comp R S := { (x, y) | ∃ z, (x, z) ∈ R ∧ (z, y) ∈ S }
   one := { (x, y) | x = y }
   inv R := { (y, x) | (x, y) ∈ R }
@@ -334,7 +334,7 @@ instance fullRA : RelationAlgebra (Set (X × X)) where
 variable {G : Type u} [Group G]
 
 instance : RelationAlgebra (Set G) where
-  __ := inferInstanceAs (BooleanAlgebra (Set G))
+  toBooleanAlgebra := inferInstance
   comp X Y := { z | ∃ x ∈ X, ∃ y ∈ Y, z = x * y }
   one := { 1 }
   inv X := { x⁻¹ | x ∈ X }
@@ -393,8 +393,7 @@ instance : RelationAlgebra (Set G) where
       refine ⟨d * c, ⟨d, hd, c, hc, rfl⟩, ?_⟩
       simpa [mul_inv_rev] using hg.symm
   schroeder x y := by
-    intro g h
-    intro hg
+    intro g h hg
     rcases h with ⟨a, ⟨b, hb, rfl⟩, c, hc, hg_eq⟩
     apply hc
     refine ⟨b, hb, g, hg, ?_⟩
@@ -430,7 +429,7 @@ variable {S : Type} [AtomStructure S]
 
 lemma conv_conv1 (x : S) : x⁻¹⁻¹ = x := by
   have h : ∃ e : S, x = x → I e ∧ R₃ x e x := identity2 x x
-  cases' h with e em
+  rcases h with ⟨e, em⟩
   have h' : I e ∧ R₃ x e x := em rfl
   have h'' : I e := h'.1
   have h''' : R₃ x e x := h'.2
@@ -532,7 +531,9 @@ instance : AtomStructure (Z₃) where
 example : I Z₃.a ∧ R₃ Z₃.a Z₃.a Z₃.e → Z₃.e = Z₃.a := by
   intro h
   have k : I Z₃.a := by exact h.1
-  have : False := by simp at k; exact k
+  have : False := by
+    change Z₃.unary Z₃.a at k
+    exact k
   exact False.elim this
 
 example : I Z₃.e ∧ R₃ Z₃.a Z₃.a Z₃.e → Z₃.e = Z₃.e := by intro; rfl
@@ -546,7 +547,7 @@ lemma assocr (_u x y z w : S) : R₃ y z v ∧ R₃ x v w → ∃ u : S, R₃ x 
   have hyzv' : R₃ z⁻¹ y⁻¹ v⁻¹ := (peirce3 y z v).mp hyzv
   have hand : R₃ z⁻¹ y⁻¹ v⁻¹ ∧ R₃ v⁻¹ x⁻¹ w⁻¹ := ⟨hyzv', hxvw'⟩
   have h : ∃ t : S, R₃ y⁻¹ x⁻¹ t ∧ R₃ z⁻¹ t w⁻¹ := (AtomStructure.assoc v⁻¹ z⁻¹ y⁻¹ x⁻¹ w⁻¹) hand
-  cases' h with c mh
+  rcases h with ⟨c, mh⟩
   have h1 : R₃ x⁻¹⁻¹ y⁻¹⁻¹ c⁻¹ := (peirce3 _ _ _).mp mh.1
   have h2 : R₃ c⁻¹ z⁻¹⁻¹ w⁻¹⁻¹ := (peirce3 _ _ _).mp mh.2
   have h3 : R₃ x y c⁻¹ := by rw [conv_conv1, conv_conv1] at h1; exact h1
@@ -588,8 +589,7 @@ theorem Mtrue :
   t ∩ com (u ∩ com v w) (x ∩ com y z) ⊆
     com (com v (com (com (inv v) t ∩ com w x) (inv z) ∩ com w y ∩
       com (inv v) (com u y ∩ com t (inv z)))) z := by
-  intro (a0,b0)
-  intro h
+  intro (a0, b0) h
   rcases h with ⟨h1,h2⟩
   rcases h2 with ⟨c,h1,h2⟩
   rcases h1 with ⟨h3,h4⟩
