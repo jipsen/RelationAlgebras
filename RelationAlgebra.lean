@@ -34,8 +34,8 @@ lemma top_compl_eq_bot : (⊤ : A)ᶜ = ⊥ := by simp
 
 lemma compl_eq : xᶜ = yᶜ ↔ x = y := by
   constructor
-  intro h
-  rw [←compl_compl x, h, compl_compl]
+  · intro h
+    rw [←compl_compl x, h, compl_compl]
   intro h
   rw [h]
 
@@ -52,11 +52,11 @@ infixl:90 " ; "  => Comp.comp
 
 /-- An (abstract) relation algebra, as defined by Tarski [1942], is a
 Boolean algebra with three additional operation ; ⁻¹ 1 that satisfy
-the following additional equational axioms -/
-
+the following additional equational axioms
+-/
 class NonassociativeRA (A : Type u) extends BooleanAlgebra A, Comp A, One A, Inv A where
-  comp_one  : ∀ x : A, x ; 1 = x
-  one_comp  : ∀ x : A, 1 ; x = x
+  comp_one : ∀ x : A, x ; 1 = x
+  one_comp : ∀ x : A, 1 ; x = x
   peirce_law1 (x y z : A) : x ; y ⊓ z = ⊥ ↔ x⁻¹ ; z ⊓ y = ⊥
   peirce_law2 (x y z : A) : x ; y ⊓ z = ⊥ ↔ z ; y⁻¹ ⊓ x = ⊥
 
@@ -520,7 +520,7 @@ instance : AtomStructure (Z₃) where
   assoc u x y z w := by
     intro h
     cases u <;> cases x <;> cases y <;> cases z <;> cases w <;>
-      simp only [Z₃.ternary] at h ⊢ <;>
+      simp [Z₃.ternary] at h ⊢ <;>
       first
       | exact ⟨Z₃.e, trivial, trivial⟩
       | exact ⟨Z₃.a, trivial, trivial⟩
